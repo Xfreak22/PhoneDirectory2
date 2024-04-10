@@ -49,6 +49,7 @@ class AddSubscriber extends Component {
              <input className="input-design" id="name" name="name" onChange={this.inputChangedHandler}/><br/>
              <label className="label-design" htmlFor="phone">Phone: </label><br/>
              <input className="input-design" id="phone" name="phone" onChange={this.inputChangedHandler}/><br/>
+             
             <div className="span-container-for-subscriber">
              <span>Subsrciber to be added: </span><br/>
              <span className="label-design">Name: {name}</span><br/>
