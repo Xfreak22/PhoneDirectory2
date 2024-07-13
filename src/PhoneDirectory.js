@@ -1,36 +1,56 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import ShowSubscribers from './ShowSubscribers';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, json} from 'react-router-dom';
 import AddSubscriber from './AddSubscriber';
 
 export default function PhoneDirectory() {
     
-        const[SubscriberList,setSubscribersList]= useState([{
-                            id: '1',
-                            name:"Suraj kumar",
-                            phone:"9319236003"
-                        },
-                    {
-                        id: '2',
-                            name:"Manish kumar",
-                            phone:"8448134417"
-                    }])
+        const[SubscriberList,setSubscribersList]= useState([])
+
+        function loaddata() {
+            fetch("http://localhost:7081/contacts")
+            .then(input=>input.json())
+            .then(data=>setSubscribersList(data));
+           } 
+
+
+        useEffect(()=>{
+            loaddata();
+         },[])
 
       function deletesubscriberHandler(subscriberId){
-            let subscribersList = SubscriberList;
-            const newSubscribers = subscribersList.filter((subscriber)=> (subscriber.id !== subscriberId));
-            setSubscribersList(newSubscribers);
-             }
+            // let subscribersList = SubscriberList;
+            // const newSubscribers = subscribersList.filter((subscriber)=> (subscriber.id !== subscriberId));
+            // setSubscribersList(newSubscribers);
+            fetch("http://localhost:7081/contacts/"+ subscriberId, {method:"DELETE"})
+            .then(input=>input.json())
+            .then(data=>{
+
+            loaddata();
+      })}
 
 
            function addsubscriberHandler (newSubscriber) {
-                if(SubscriberList.length > 0){
-                 newSubscriber.id = SubscriberList[SubscriberList.length - 1].id +1;   
-                }else{
-                 newSubscriber.id = 1;
-                }
-                SubscriberList.push(newSubscriber);
-                setSubscribersList(SubscriberList);
+
+                fetch(" http://localhost:7081/contacts",
+                 {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/Json"
+                    },
+                    body:JSON.stringify(newSubscriber)
+                })
+
+
+                loaddata();
+            
+                // if(SubscriberList.length > 0){
+                //  newSubscriber.id = SubscriberList[SubscriberList.length - 1].id +1;   
+                // }else{
+                //  newSubscriber.id = 1;
+                // }
+                // SubscriberList.push(newSubscriber);
+                // setSubscribersList(SubscriberList);
              }
     return(
         <Router>

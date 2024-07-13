@@ -4,6 +4,7 @@ import Header from "./Header";
 import Button1 from "./button";
 import { Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 
 
 
@@ -43,11 +44,45 @@ export default function AddSubscriber(props) {
     <Link to="/"><Button1 heading="Back"/></Link>
     </div>
     <div>
-        <form className="form-style" onSubmit={onFormSubmitted}>
-         <label className="label-design" htmlFor="name">Name: </label><br/>
-         <input className="input-design" id="name" name="name" onChange={inputChangedHandler}/><br/>
-         <label className="label-design" htmlFor="phone">Phone: </label><br/>
-         <input className="input-design" id="phone" name="phone" onChange={inputChangedHandler}/><br/>
+        <ValidatorForm className="form-style" onSubmit={onFormSubmitted}>
+
+         <TextValidator
+         className="input-design"
+         id="name"
+         name="name"
+         type="text" 
+         onChange={inputChangedHandler}
+         label="Name"
+         value={name}
+         validators={["required"]}
+         variant="standard"
+         errorMessages={["Name is required"]}
+         >
+         </TextValidator>
+
+
+         <br/>
+         {/* <label className="label-design" htmlFor="name">Name: </label><br/>
+         <input className="input-design" id="name" name="name" onChange={inputChangedHandler}/><br/> */}
+
+
+
+        <TextValidator
+         className="input-design"
+         id="phone"
+         name="phone"
+         type="number" 
+         onChange={inputChangedHandler}
+         label="Phone"
+         value={phone}
+         validators={["required"]}
+         variant="standard"
+         errorMessages={["Phone Number is required"]}
+         >
+         </TextValidator>
+         <br/>
+         {/* <label className="label-design" htmlFor="phone">Phone: </label><br/>
+         <input className="input-design"  id="phone" name="phone" onChange={inputChangedHandler}/><br/> */}
          
         <div className="span-container-for-subscriber">
          <span>Subsrciber to be added: </span><br/>
@@ -55,7 +90,7 @@ export default function AddSubscriber(props) {
          <span className="label-design">Phone: {phone}</span><br/> 
          <button type="submit" className="button-style2">Add</button>
         </div>
-        </form>
+        </ValidatorForm>
     </div>
     </Fragment>
     )
