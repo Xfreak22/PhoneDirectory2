@@ -1,18 +1,22 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState} from 'react';
+import React, { Fragment, useCallback, useEffect, useReducer, useState} from 'react';
 import ShowSubscribers from './ShowSubscribers';
-import {BrowserRouter as Router, Route, Routes, json} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import AddSubscriber from './AddSubscriber';
 import Footer from './Footer';
 import {SubscriberCountContext} from './SubscriberCountContext';
+import {TotalSubscriberReducer} from './TotalSubscriberReducer'
 
 export default function PhoneDirectory() {
     
         const[SubscriberList,setSubscribersList]= useState([])
+        const [state,dispatch] = useReducer(TotalSubscriberReducer, {count:0})
 
-        function loaddata() {
-            fetch("http://localhost:7081/contacts")
-            .then(input=>input.json())
-            .then(data=>setSubscribersList(data));
+      async  function loaddata() {
+            const rawresponse = await fetch("http://localhost:7081/contacts");
+            const data = await rawresponse.json();
+            
+            dispatch({"type":"UPDATE_COUNT", payload:data.length});
+            setSubscribersList(data);
            } 
 
 
@@ -31,9 +35,6 @@ export default function PhoneDirectory() {
      }, [])
 
 
-     const numberOfSubscriptions = useMemo(()=>{
-            return SubscriberList.length;
-     },[SubscriberList])
     //   function deletesubscriberHandler(subscriberId){
     //         // let subscribersList = SubscriberList;
     //         // const newSubscribers = subscribersList.filter((subscriber)=> (subscriber.id !== subscriberId));
@@ -76,7 +77,7 @@ export default function PhoneDirectory() {
             <Route exact path="/add" Component={({history}, props) => <AddSubscriber history={history} {...props} addsubscriberHandler={(newSubscriber)=>addsubscriberHandler(newSubscriber)}/>}/>
             </Routes>
         </Router>
-        <SubscriberCountContext.Provider value={numberOfSubscriptions}>
+        <SubscriberCountContext.Provider value={state.count}>
         <Footer></Footer>
         </SubscriberCountContext.Provider>
         </Fragment>
