@@ -1,21 +1,26 @@
-import React, { Fragment, useCallback, useEffect, useReducer, useState} from 'react';
+import React, { Fragment, useCallback, useEffect, useState} from 'react';
 import ShowSubscribers from './ShowSubscribers';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import AddSubscriber from './AddSubscriber';
 import Footer from './Footer';
 import {SubscriberCountContext} from './SubscriberCountContext';
-import {TotalSubscriberReducer} from './TotalSubscriberReducer'
+import { useDispatch } from 'react-redux';
+import { useReducer } from 'react';
+import { TotalSubscriberReducer } from './TotalSubscriberReducer';
 
 export default function PhoneDirectory() {
     
         const[SubscriberList,setSubscribersList]= useState([])
-        const [state,dispatch] = useReducer(TotalSubscriberReducer, {count:0})
+       const [state,dispatchTotalSubscriberReducer] = useReducer(TotalSubscriberReducer, {count:0})
+
+       const dispatch = useDispatch();
 
       async  function loaddata() {
             const rawresponse = await fetch("http://localhost:7081/contacts");
             const data = await rawresponse.json();
             
-            dispatch({"type":"UPDATE_COUNT", payload:data.length});
+            dispatchTotalSubscriberReducer({"type":"UPDATE_COUNT", payload:data.length});
+          dispatch({"type":"SET_SUBSCRIBERS", payload: data})
             setSubscribersList(data);
            } 
 
@@ -73,7 +78,7 @@ export default function PhoneDirectory() {
         <Fragment>
         <Router>
             <Routes>
-            <Route exact path="/"  Component={(props) => <ShowSubscribers {...props} SubscriberList={SubscriberList} deletesubscriberHandler={(subscriberId)=>deletesubscriberHandler(subscriberId)}/>}/>
+            <Route exact path="/"  Component={(props) => <ShowSubscribers deletesubscriberHandler={(subscriberId)=>deletesubscriberHandler(subscriberId)}/>}/>
             <Route exact path="/add" Component={({history}, props) => <AddSubscriber history={history} {...props} addsubscriberHandler={(newSubscriber)=>addsubscriberHandler(newSubscriber)}/>}/>
             </Routes>
         </Router>

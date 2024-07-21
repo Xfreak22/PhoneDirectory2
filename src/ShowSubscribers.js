@@ -4,14 +4,18 @@ import './ShowSubscribers.css';
 import './common/common1.css';
 import Button1 from './button';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-export default function ShowSubscribers({SubscriberList,deletesubscriberHandler}) {
+export default function ShowSubscribers({deletesubscriberHandler}) {
+
+ const SubscriberList = useSelector(state => state.subscribers)
 
   return (
     <div >
       <div className="header-styling">
       <Header heading="Phone Directory"/>
       </div>
+      
      <Link to="/add"><Button1 heading="Add"/></Link>
      <div>  <div className='sub-heading-div-margin-for-name-and-num'>
    <span style={{color: "darkslategrey", margin: 30, padding: 10, width: "auto"}}>Name</span>
